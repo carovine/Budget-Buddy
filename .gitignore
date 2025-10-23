@@ -1,0 +1,15 @@
+# Ignore compiled output
+*.o
+*.exe
+
+# Ignore temporary files
+*.tmp
+temp/
+
+# Ignore sensitive information
+.env
+api_keys.txt
+
+# Ignore node modules
+node_modules/
+backend/node_modules/
