@@ -5,6 +5,7 @@ import { sql } from "./config/db.js";
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 
 const myport = process.env.PORT;
 
@@ -31,9 +32,17 @@ app.get("/", (req, res) => {
 
 app.post("/api/transactions", async (req, res) => {
   try {
-    
+    const { user_id, title, amount, category } = req.body;
+    if (!user_id || !title || amount === undefined || !category) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    const transaction =
+      await sql`INSERT INTO transactions (user_id, title, amount, category) VALUES (${user_id}, ${title}, ${amount}, ${category}) RETURNING *`;
+    console.log("Transaction created:", transaction);
+    res.status(201).json(transaction[0]);
   } catch (error) {
-
+    console.log("Error creating transaction:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
